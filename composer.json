@@ -1,5 +1,6 @@
 {
     "name": "creode/pimcore-bundle-avatar",
+    "description": "A Pimcore bundle for the Avatar object",
     "type": "pimcore-bundle",
     "authors": [
         {

@@ -1,0 +1,23 @@
+{
+    "name": "creode/pimcore-bundle-avatar",
+    "type": "pimcore-bundle",
+    "authors": [
+        {
+            "name": "Gareth Midwood",
+            "email": "gareth@digital-nature.co.uk"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Creode\\AvatarBundle\\": ""
+        }
+    },
+    "extra": {
+        "pimcore": {
+            "bundles": [
+                "Creode\\AvatarBundle\\AvatarBundle"
+            ]
+        }
+    }
+}

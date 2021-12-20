@@ -1,0 +1,345 @@
+pimcore:
+    workflows:
+        avatar_data_enrichment:
+            # We're using state_machine rather than a plain old workflow as
+            # it allows us to jump to a state from multiple places, rather
+            # than being purely linear. See reject_avatar 'from' attribute
+            # for an example, you can reject the avatar from any stage of the
+            # workflow. That's not possible with a standard workflow.
+            type: 'state_machine'
+
+            label: "Avatar Data Enrichment Workflow"
+
+            # This defines which classes use this workflow.
+            # You can also do this by defining 'supports' for specific classes.
+            # The only difference I've seen is that the strategy
+            # approach allows you to restrict workflows based on url,
+            # but then we're not using custom upload urls, so maybe
+            # it's not needed... I've documented both just in case
+            support_strategy:
+                service: Creode\AvatarBundle\Workflow\SupportsStrategy
+#            supports:
+#                - 'Pimcore\Model\DataObject\Avatar'
+
+            # The first step of the process. This is the place you're put
+            # when you create a new object
+            initial_markings: stage1_upload_2d_image
+
+            # places are steps in the workflow
+            places:
+                stage1_upload_2d_image:
+                    label: 'New - 2D Image'
+                    title: 'Upload 2D Image'
+                    color: '#3572b0'
+                    permissions:
+                        - objectLayout: AvatarStage1
+                          publish: false
+                          unpublish: false
+
+                stage1_upload_2d_image_review:
+                    label: 'Awaiting 2D Image Review'
+                    title: 'Awaiting 2D Image Review'
+                    color: '#3572b0'
+                    permissions:
+                        - objectLayout: AvatarReview
+                          publish: false
+                          unpublish: false
+
+                stage2_upload_3d_image:
+                    label: 'In Progress - 3D Image & Object'
+                    title: 'Upload 3D Image and Object'
+                    color: '#d9ef36'
+                    permissions:
+                        - objectLayout: AvatarStage2
+                          publish: false
+                          unpublish: false
+
+                stage2_upload_3d_image_review:
+                    label: 'Awaiting 3D Image Review'
+                    title: 'Awaiting 3D Image Review'
+                    color: '#d9ef36'
+                    permissions:
+                        - objectLayout: AvatarReview
+                          publish: false
+                          unpublish: false
+
+                stage3_upload_animation_video:
+                    label: 'In Progress - Animation Video'
+                    title: 'Upload Animation Video'
+                    color: '#d9ef36'
+                    permissions:
+                        - objectLayout: AvatarStage3
+                          publish: false
+                          unpublish: false
+
+                stage3_upload_animation_video_review:
+                    label: 'Awaiting Animation Video Review'
+                    title: 'Awaiting Animation Video Review'
+                    color: '#d9ef36'
+                    permissions:
+                        - objectLayout: AvatarReview
+                          publish: false
+                          unpublish: false
+
+                stage4_upload_asset:
+                    label: 'In Progress - Asset'
+                    title: 'Upload Completed Asset'
+                    color: '#d9ef36'
+                    permissions:
+                        - objectLayout: AvatarStage4
+                          publish: false
+                          unpublish: false
+
+                stage4_upload_asset_review:
+                    label: 'Awaiting Asset Review'
+                    title: 'Awaiting Asset Review'
+                    color: '#d9ef36'
+                    permissions:
+                        - objectLayout: AvatarReview
+                          publish: false
+                          unpublish: false
+
+                stage5_upload_json:
+                    label: 'In Progress - json'
+                    title: 'Upload json'
+                    color: '#d9ef36'
+                    permissions:
+                        - objectLayout: AvatarStage5
+                          publish: false
+                          unpublish: false
+
+                stage5_upload_json_review:
+                    label: 'Awaiting json Review'
+                    title: 'Awaiting json Review'
+                    color: '#d9ef36'
+                    permissions:
+                        - objectLayout: AvatarReview
+                          publish: false
+                          unpublish: false
+
+                content_prepared:
+                    label: 'Content Prepared'
+                    title: 'Ready to publish'
+                    color: '#28a013'
+                    permissions:
+                        - objectLayout: AvatarCompleted
+                          publish: false
+                          unpublish: false
+
+                accepted:
+                    label: 'Approved'
+                    color: '#28a013'
+                    permissions:
+                        -   objectLayout: AvatarCompleted
+                           # Adding modify: false means that you can no longer reject the avatar
+                            modify: false
+                            publish: true
+                            unpublish: true
+
+                rejected:
+                    label: 'Rejected avatar'
+                    color: '#28a013'
+                    permissions:
+                        - publish: false
+                          unpublish: true
+
+            # transitions are how you move from one 'place' to another
+            transitions:
+                submit_stage1:
+                    from: stage1_upload_2d_image
+                    to: stage1_upload_2d_image_review
+                    options:
+                        label: 'Submit 2D Image for review'
+                        notes:
+                            commentEnabled: true
+                            commentRequired: false
+                        notificationSettings:
+                            - notifyUsers: ['admin']
+                              notifyRoles: ['projectmanagers', 'admins']
+                              channelType: ['mail', 'pimcore_notification']
+
+                submit_stage1_review:
+                    from: stage1_upload_2d_image_review
+                    to: stage2_upload_3d_image
+                    guard: "'ROLE_PIMCORE_ADMIN' in role_names or 'ROLE_AVATAR_APPROVE_STAGE1' in role_names"
+                    options:
+                        label: 'Approve 2D Image'
+                        notes:
+                            commentEnabled: true
+                            commentRequired: false
+                        notificationSettings:
+                            - notifyUsers: ['admin']
+                              notifyRoles: ['projectmanagers', 'admins']
+                              channelType: ['mail', 'pimcore_notification']
+
+                submit_stage2:
+                    from: stage2_upload_3d_image
+                    to: stage2_upload_3d_image_review
+                    options:
+                        label: 'Submit 3D Image for review'
+                        notes:
+                            commentEnabled: true
+                            commentRequired: false
+                        notificationSettings:
+                            - notifyUsers: [ 'admin' ]
+                              notifyRoles: [ 'projectmanagers', 'admins' ]
+                              channelType: [ 'mail', 'pimcore_notification' ]
+
+                submit_stage2_review:
+                    from: stage2_upload_3d_image_review
+                    to: stage3_upload_animation_video
+                    guard: "'ROLE_PIMCORE_ADMIN' in role_names or 'ROLE_AVATAR_APPROVE_STAGE2' in role_names"
+                    options:
+                        label: 'Approve 3D Image'
+                        notes:
+                            commentEnabled: true
+                            commentRequired: false
+                        notificationSettings:
+                            - notifyUsers: [ 'admin' ]
+                              notifyRoles: [ 'projectmanagers', 'admins' ]
+                              channelType: [ 'mail', 'pimcore_notification' ]
+
+                submit_stage3:
+                    from: stage3_upload_animation_video
+                    to: stage3_upload_animation_video_review
+                    options:
+                        label: 'Submit Animation Video for review'
+                        notes:
+                            commentEnabled: true
+                            commentRequired: false
+                        notificationSettings:
+                            - notifyUsers: [ 'admin' ]
+                              notifyRoles: [ 'projectmanagers', 'admins' ]
+                              channelType: [ 'mail', 'pimcore_notification' ]
+
+                submit_stage3_review:
+                    from: stage3_upload_animation_video_review
+                    to: stage4_upload_asset
+                    guard: "'ROLE_PIMCORE_ADMIN' in role_names or 'ROLE_AVATAR_APPROVE_STAGE3' in role_names"
+                    options:
+                        label: 'Approve Animation Video'
+                        notes:
+                            commentEnabled: true
+                            commentRequired: false
+                        notificationSettings:
+                            - notifyUsers: [ 'admin' ]
+                              notifyRoles: [ 'projectmanagers', 'admins' ]
+                              channelType: [ 'mail', 'pimcore_notification' ]
+
+                submit_stage4:
+                    from: stage4_upload_asset
+                    to: stage4_upload_asset_review
+                    options:
+                        label: 'Submit Asset for review'
+                        notes:
+                            commentEnabled: true
+                            commentRequired: false
+                        notificationSettings:
+                            - notifyUsers: [ 'admin' ]
+                              notifyRoles: [ 'projectmanagers', 'admins' ]
+                              channelType: [ 'mail', 'pimcore_notification' ]
+
+                submit_stage4_review:
+                    from: stage4_upload_asset_review
+                    to: stage5_upload_json
+                    guard: "'ROLE_PIMCORE_ADMIN' in role_names or 'ROLE_AVATAR_APPROVE_STAGE4' in role_names"
+                    options:
+                        label: 'Approve Asset'
+                        notes:
+                            commentEnabled: true
+                            commentRequired: false
+                        notificationSettings:
+                            - notifyUsers: [ 'admin' ]
+                              notifyRoles: [ 'projectmanagers', 'admins' ]
+                              channelType: [ 'mail', 'pimcore_notification' ]
+
+                submit_stage5:
+                    from: stage5_upload_json
+                    to: stage5_upload_json_review
+                    options:
+                        label: 'Submit json for review'
+                        notes:
+                            commentEnabled: true
+                            commentRequired: false
+                        notificationSettings:
+                            - notifyUsers: ['admin']
+                              notifyRoles: ['projectmanagers', 'admins']
+                              channelType: ['mail', 'pimcore_notification']
+
+                submit_stage5_review:
+                    from: stage5_upload_json_review
+                    to: content_prepared
+                    guard: "'ROLE_PIMCORE_ADMIN' in role_names or 'ROLE_AVATAR_APPROVE_STAGE5' in role_names"
+                    options:
+                        label: 'Approve json'
+                        notes:
+                            commentEnabled: true
+                            commentRequired: false
+                        notificationSettings:
+                            - notifyUsers: ['admin']
+                              notifyRoles: ['projectmanagers', 'admins']
+                              channelType: ['mail', 'pimcore_notification']
+
+                publish:
+                    from: content_prepared
+                    to: accepted
+                    guard: "'ROLE_PIMCORE_ADMIN' in role_names or 'ROLE_AVATAR_APPROVE_FINAL' in role_names"
+                    options:
+                        label: 'Approve this avatar'
+                        notificationSettings:
+                            - notifyUsers: ['admin']
+                              notifyRoles: ['projectmanagers', 'admins']
+                              channelType: ['mail', 'pimcore_notification']
+
+                reject_avatar:
+                    from: [
+                            stage1_upload_2d_image,
+                            stage2_upload_3d_image,
+                            stage3_upload_animation_video,
+                            stage4_upload_asset,
+                            stage5_upload_json,
+                            content_prepared,
+                            stage1_upload_2d_image_review,
+                            stage2_upload_3d_image_review,
+                            stage3_upload_animation_video_review,
+                            stage4_upload_asset_review,
+                            stage5_upload_json_review
+                    ]
+                    to: rejected
+                    options:
+                        label: 'Reject the avatar'
+                        notes:
+                            commentEnabled: true
+                            commentRequired: true
+                        notificationSettings:
+                            - notifyUsers: ['admin']
+                              notifyRoles: ['projectmanagers', 'admins']
+                              channelType: ['mail', 'pimcore_notification']
+
+                reopen_issue:
+                    from: [rejected, accepted]
+                    to: stage1_upload_2d_image
+                    guard: "'ROLE_PIMCORE_ADMIN' in role_names"
+                    options:
+                        label: 'Reopen Avatar review process'
+                        changePublishedState: force_unpublished
+                        notes:
+                            commentEnabled: true
+                            commentRequired: true
+
+            # Allows people to log time against this workflow. I'm not
+            # sure that this is needed, so I've commented it out
+#            globalActions:
+#                log_time:
+#                    label: 'Log Time'
+#                    guard: "is_fully_authenticated()"
+#                    notes:
+#                        commentEnabled: true
+#                        commentRequired: true
+#                        type: 'Worklog'
+#                        title: 'Time Logged'
+#                        additionalFields:
+#                            - name: 'timeWorked'
+#                              fieldType: 'input'
+#                              title: 'Time spent'
+#                              required: true

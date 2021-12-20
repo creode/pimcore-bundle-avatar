@@ -1,0 +1,3 @@
+avatar_homepage:
+    path:     /avatar
+    defaults: { _controller: AvatarBundle\Controller\DefaultController:indexAction }

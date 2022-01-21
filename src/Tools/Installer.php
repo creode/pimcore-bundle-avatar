@@ -323,13 +323,13 @@ class Installer extends AbstractInstaller
      * @var array
      */
     private array $customLayoutDefinitionsToInstall = [
-        'AvatarStage 1' => ['id' => 'AvatarStage1', 'class' => 'Avatar'],
-        'AvatarStage 2' => ['id' => 'AvatarStage2', 'class' => 'Avatar'],
-        'AvatarStage 3' => ['id' => 'AvatarStage3', 'class' => 'Avatar'],
-        'AvatarStage 4' => ['id' => 'AvatarStage4', 'class' => 'Avatar'],
-        'AvatarStage 5' => ['id' => 'AvatarStage5', 'class' => 'Avatar'],
-        'AvatarCompleted' => ['id' => 'AvatarCompleted', 'class' => 'Avatar'],
-        'AvatarReview' => ['id' => 'AvatarReview', 'class' => 'Avatar'],
+        'Avatar Stage 1' => ['id' => 'AvatarStage1', 'class' => 'Avatar'],
+        'Avatar Stage 2' => ['id' => 'AvatarStage2', 'class' => 'Avatar'],
+        'Avatar Stage 3' => ['id' => 'AvatarStage3', 'class' => 'Avatar'],
+        'Avatar Stage 4' => ['id' => 'AvatarStage4', 'class' => 'Avatar'],
+        'Avatar Stage 5' => ['id' => 'AvatarStage5', 'class' => 'Avatar'],
+        'Avatar Completed' => ['id' => 'AvatarCompleted', 'class' => 'Avatar'],
+        'Avatar Review' => ['id' => 'AvatarReview', 'class' => 'Avatar'],
     ];
 
     /**

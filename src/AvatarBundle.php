@@ -13,7 +13,7 @@ class AvatarBundle extends AbstractPimcoreBundle
     {
         // getVersion() will use this name to read the version from
         // PackageVersions and return a normalized value
-        return 'creode/avatar-bundle';
+        return 'creode/pimcore-bundle-avatar';
     }
 
     public function getJsPaths()

@@ -647,9 +647,10 @@ class Installer extends AbstractInstaller
                     if (isset($workspaces['objects'])) {
                         $workspaceObjects = [];
 
-                        foreach ($workspaces['objects'] as $objectValues) {
+                        foreach ($workspaces['objects'] as $cid => $objectValues) {
                             $objectProperties = new DataObject();
-                            $objectProperties->setValues($objectValues);
+                            $fullObjectValues = array_merge($objectValues, ['cid' => $cid]);
+                            $objectProperties->setValues($fullObjectValues);
                             $workspaceObjects[] = $objectProperties;
                         }
 

@@ -329,7 +329,11 @@ class Installer extends AbstractInstaller
         'Avatar Stage 4' => ['id' => 'AvatarStage4', 'class' => 'Avatar'],
         'Avatar Stage 5' => ['id' => 'AvatarStage5', 'class' => 'Avatar'],
         'Avatar Completed' => ['id' => 'AvatarCompleted', 'class' => 'Avatar'],
-        'Avatar Review' => ['id' => 'AvatarReview', 'class' => 'Avatar'],
+        'Avatar Review Stage 1' => ['id' => 'AvatarReviewStage1', 'class' => 'Avatar'],
+        'Avatar Review Stage 2' => ['id' => 'AvatarReviewStage2', 'class' => 'Avatar'],
+        'Avatar Review Stage 3' => ['id' => 'AvatarReviewStage3', 'class' => 'Avatar'],
+        'Avatar Review Stage 4' => ['id' => 'AvatarReviewStage4', 'class' => 'Avatar'],
+        'Avatar Review Stage 5' => ['id' => 'AvatarReviewStage5', 'class' => 'Avatar'],
     ];
 
     /**

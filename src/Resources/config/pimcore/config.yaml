@@ -41,7 +41,7 @@ pimcore:
                     title: 'Awaiting 2D Image Review'
                     color: '#3572b0'
                     permissions:
-                        - objectLayout: AvatarReview
+                        - objectLayout: AvatarReviewStage1
                           publish: false
                           unpublish: false
 
@@ -59,7 +59,7 @@ pimcore:
                     title: 'Awaiting 3D Image Review'
                     color: '#d9ef36'
                     permissions:
-                        - objectLayout: AvatarReview
+                        - objectLayout: AvatarReviewStage2
                           publish: false
                           unpublish: false
 
@@ -77,7 +77,7 @@ pimcore:
                     title: 'Awaiting Animation Video Review'
                     color: '#d9ef36'
                     permissions:
-                        - objectLayout: AvatarReview
+                        - objectLayout: AvatarReviewStage3
                           publish: false
                           unpublish: false
 
@@ -95,7 +95,7 @@ pimcore:
                     title: 'Awaiting Asset Review'
                     color: '#d9ef36'
                     permissions:
-                        - objectLayout: AvatarReview
+                        - objectLayout: AvatarReviewStage4
                           publish: false
                           unpublish: false
 
@@ -113,7 +113,7 @@ pimcore:
                     title: 'Awaiting json Review'
                     color: '#d9ef36'
                     permissions:
-                        - objectLayout: AvatarReview
+                        - objectLayout: AvatarReviewStage5
                           publish: false
                           unpublish: false
 
